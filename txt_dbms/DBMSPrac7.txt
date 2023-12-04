@@ -1,0 +1,231 @@
+Q1.Increment salary of employee by 40% where dept name starts with „A‟ and joining date is inyear 2000. Find the number of rows affected by the use of SQL%ROWCOUNT attributes of
+an implicit cursor. (implicit cursor). Also print message “Records not found‟ if no such data
+exist.
+
+DECLARE
+   v_increment_percentage NUMBER := 40;
+BEGIN
+   UPDATE emp
+   SET sal = sal + (sal * v_increment_percentage / 100)
+   WHERE deptno IN (SELECT deptno FROM dept WHERE dname LIKE 'A%') 
+   AND EXTRACT(YEAR FROM hiredate) = 2000;
+
+   DBMS_OUTPUT.PUT_LINE('Number of rows affected: ' || SQL%ROWCOUNT);
+
+   IF SQL%ROWCOUNT = 0 THEN
+      DBMS_OUTPUT.PUT_LINE('Records not found');
+   END IF;
+END;
+/
+
+
+Q2.Create table emp1(empno,name,sal) emp2(empno,name,sal) . Initially emp1, emp2 are empty.
+Define explicit cursor on table emp. (select all columns using %rowtype). Insert records of
+deptno(10,20) in table emp1. And Insert other records in table emp2.
+
+CREATE TABLE emp1 (
+   empno NUMBER(4),
+   ename VARCHAR2(10),
+   sal NUMBER(7,2)
+);
+
+CREATE TABLE emp2 (
+   empno NUMBER(4),
+   ename VARCHAR2(10),
+   sal NUMBER(7,2)
+);
+
+-- Step 2: Define explicit cursor on table emp
+DECLARE
+   CURSOR emp_cursor IS
+      SELECT *
+      FROM emp;
+   
+   v_emp emp_cursor%ROWTYPE;
+BEGIN
+   -- Step 3: Insert records into emp1 and emp2 based on deptno
+   FOR rec IN emp_cursor LOOP
+      IF rec.deptno IN (10, 20) THEN
+         INSERT INTO emp1 VALUES (rec.empno, rec.ename, rec.sal);
+      ELSE
+         INSERT INTO emp2 VALUES (rec.empno, rec.ename, rec.sal);
+      END IF;
+   END LOOP;
+
+   -- Step 4: Fetch multiple records and more than one column from different tables
+   FOR rec IN (SELECT e.ename, e.sal, d.dname
+               FROM emp e
+               JOIN dept d ON e.deptno = d.deptno
+               WHERE e.sal > 3000) LOOP
+      DBMS_OUTPUT.PUT_LINE('Employee Name: ' || rec.ename || ', Salary: ' || rec.sal || ', Department Name: ' || rec.dname);
+   END LOOP;
+END;
+/
+
+
+Q3.Write a program in PL/SQL to FETCH multiple records and more than one columns from
+different tables.
+Define cursor to fetch data ename,sal,dname using table emp and dept. Display data where
+sal>3000.
+
+DECLARE
+   CURSOR emp_dept_cursor IS
+      SELECT e.ename, e.sal, d.dname
+      FROM emp e
+      JOIN dept d ON e.deptno = d.deptno
+      WHERE e.sal > 3000;
+
+   v_ename emp_dept_cursor.ename%TYPE;
+   v_sal emp_dept_cursor.sal%TYPE;
+   v_dname emp_dept_cursor.dname%TYPE;
+BEGIN
+   OPEN emp_dept_cursor;
+   LOOP
+      FETCH emp_dept_cursor INTO v_ename, v_sal, v_dname;
+      EXIT WHEN emp_dept_cursor%NOTFOUND;
+
+      DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_ename || ', Salary: ' || v_sal || ', Department Name: ' || v_dname);
+   END LOOP;
+
+   CLOSE emp_dept_cursor;
+END;
+/
+
+
+Q4.Write a program in PL/SQL to create a cursor displays the name and salary of each employee
+in the EMPLOYEES table whose department number is equal to parameter 1, salary is less
+than a parameter2 value passed in cursor. (use parameterized cursor).
+
+DECLARE
+   v_deptno_param NUMBER := 10;
+   v_salary_param NUMBER := 5000;
+
+   CURSOR emp_cursor (p_deptno NUMBER, p_salary NUMBER) IS
+      SELECT ename, sal
+      FROM emp
+      WHERE deptno = p_deptno AND sal < p_salary;
+
+   v_ename emp_cursor.ename%TYPE;
+   v_sal emp_cursor.sal%TYPE;
+BEGIN
+   OPEN emp_cursor(v_deptno_param, v_salary_param);
+   LOOP
+      FETCH emp_cursor INTO v_ename, v_sal;
+      EXIT WHEN emp_cursor%NOTFOUND;
+
+      DBMS_OUTPUT.PUT_LINE('Employee Name: ' || v_ename || ', Salary: ' || v_sal);
+   END LOOP;
+
+   CLOSE emp_cursor;
+END;
+/
+
+
+Q5.Define cursor on emp to store data of employs those worked for more than 1 year in the
+organization. Increament salary of these employees by 30%.
+
+DECLARE
+   CURSOR emp_years_cursor IS
+      SELECT *
+      FROM emp
+      WHERE MONTHS_BETWEEN(SYSDATE, hiredate) >= 12;
+
+   v_empno emp_years_cursor.empno%TYPE;
+   v_ename emp_years_cursor.ename%TYPE;
+   v_salary emp_years_cursor.sal%TYPE;
+BEGIN
+   OPEN emp_years_cursor;
+   LOOP
+      FETCH emp_years_cursor INTO v_empno, v_ename, v_salary;
+      EXIT WHEN emp_years_cursor%NOTFOUND;
+
+      UPDATE emp
+      SET sal = sal + (sal * 0.3)
+      WHERE empno = v_empno;
+   END LOOP;
+
+   CLOSE emp_years_cursor;
+END;
+/
+
+
+Q6.Create table account. Define cursor on account to select data of acct no 11,12,13. Fetch cursor
+data to withdraw amount of Rs 2000. If Minimum balance after deduction >=1000, then only
+deduct from table account otherwise Insert data of failure transaction “insufficient fund” in
+table failtransaction. [ refer to pdf sent]
+
+DECLARE
+   CURSOR acct_cursor IS
+      SELECT *
+      FROM account
+      WHERE acct_no IN (11, 12, 13);
+
+   v_acct_no acct_cursor.acct_no%TYPE;
+   v_balance acct_cursor.balance%TYPE;
+BEGIN
+   OPEN acct_cursor;
+   FETCH acct_cursor INTO v_acct_no, v_balance;
+
+   IF v_balance - 2000 >= 1000 THEN
+      UPDATE account
+      SET balance = balance - 2000
+      WHERE acct_no = v_acct_no;
+   ELSE
+      INSERT INTO failtransaction VALUES ('insufficient fund');
+   END IF;
+
+   CLOSE acct_cursor;
+END;
+/
+
+
+Q7.Define cursor to select deptno,dname and employee count working in that department. (use
+join emp and dept). Use for loop and Display all information.
+
+DECLARE
+   CURSOR dept_cursor IS
+      SELECT d.deptno, d.dname, COUNT(e.empno) AS emp_count
+      FROM emp e
+      JOIN dept d ON e.deptno = d.deptno
+      GROUP BY d.deptno, d.dname;
+
+   v_deptno dept_cursor.deptno%TYPE;
+   v_dname dept_cursor.dname%TYPE;
+   v_emp_count dept_cursor.emp_count%TYPE;
+BEGIN
+   OPEN dept_cursor;
+   FOR rec IN dept_cursor LOOP
+      DBMS_OUTPUT.PUT_LINE('Department No: ' || rec.deptno || ', Department Name: ' || rec.dname || ', Employee Count: ' || rec.emp_count);
+   END LOOP;
+
+   CLOSE dept_cursor;
+END;
+/
+
+
+Q8.Modify 7 to Define cursor to select deptno,dname and employee count working in that
+department having employee count >=3. (use join emp and dept). Use for loop and Display all
+information.
+
+DECLARE
+   CURSOR dept_cursor IS
+      SELECT d.deptno, d.dname, COUNT(e.empno) AS emp_count
+      FROM emp e
+      JOIN dept d ON e.deptno = d.deptno
+      GROUP BY d.deptno, d.dname
+      HAVING COUNT(e.empno) >= 3;
+
+   v_deptno dept_cursor.deptno%TYPE;
+   v_dname dept_cursor.dname%TYPE;
+   v_emp_count dept_cursor.emp_count%TYPE;
+BEGIN
+   OPEN dept_cursor;
+   FOR rec IN dept_cursor LOOP
+      DBMS_OUTPUT.PUT_LINE('Department No: ' || rec.deptno || ', Department Name: ' || rec.dname || ', Employee Count: ' || rec.emp_count);
+   END LOOP;
+
+   CLOSE dept_cursor;
+END;
+/
+
+

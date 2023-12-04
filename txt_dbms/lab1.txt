@@ -1,0 +1,473 @@
+Roll no: 42
+Name: Godwin Shalom
+SEM/sec: V-B
+Batch: B3
+
+
+SQL> create table bus(
+  2  busno number(3),
+  3  source varchar2(15) not null,
+  4  dest varchar2(15) not null,
+  5  coachtype varchar2(5),
+  6  constraint bus_pk_busno primary key(busno),
+  7  constraint bus_ck_coachtype check(coachtype in ('AC','NonAC')));
+
+Table created.
+
+SQL> create table ticket(
+  2  ticketno number(3),
+  3  doj date,
+  4  busno number(3),
+  5  seatno number(3),
+  6  source varchar2(15) not null,
+  7  dest varchar2(15) not null,
+  8  cost decimal(5,2),
+  9  constraint ticket_pk_ticketno primary key(ticketno),
+ 10  constraint ticket_ck_doj check(doj>to_date('15092023','DDMMYYYY')),
+ 11  constraint ticket_fk_busno foreign key(busno) references bus(busno),
+ 12  constraint ticket_uq_seatno unique(seatno));
+
+Table created.
+
+SQL> desc bus;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                     NOT NULL NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+
+SQL> desc ticket
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                  NOT NULL NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(5,2)
+
+SQL> creat table passenger(
+SP2-0734: unknown command beginning "creat tabl..." - rest of line ignored.
+SQL> create table passenger(
+  2  passportid char(5),
+  3  name varchar2(15) not null,
+  4  ticketno number(3),
+  5  contactno number(10),
+  6  gender char(1),
+  7  constraint passenger_pk_passportid primary key(passportid),
+  8  constraint passenger_fk_ticketno foreign key(ticketno) references ticket(ticketno),
+  9  constraint passenger_uq_contactno unique(contactno),
+ 10  age number(2),
+ 11  constraint passenger_ck_age check(age>0),
+ 12  constraint passenger_ck_gender check(gender in ('M','F')));
+
+Table created.
+
+SQL> desc passenger
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                NOT NULL CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ CONTACTNO                                          NUMBER(10)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+
+
+SQL> create table reservation(
+  2  pnrno number(5),
+  3  doj date,
+  4  noofseats number(2),
+  5  busno number(3),
+  6  constraint reservation_pk_pnrno primary key(pnrno),
+  7  constraint reservation_ck_doj check(doj>to_date('15092023','DDMMYYYY')),
+  8  constraint reservation_fk_busno foreign key(busno) references bus(busno));
+
+Table created.
+
+SQL> desc reservation
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                     NOT NULL NUMBER(5)
+ DOJ                                                DATE
+ NOOFSEATS                                          NUMBER(2)
+ BUSNO                                              NUMBER(3)
+
+SQL> insert into bus values(101,'Nagpur','Pune','AC');
+
+1 row created.
+
+SQL> insert into bus values(&busno,'&source','&destination','&coachtype');
+Enter value for busno: 102
+Enter value for source: Nagpur
+Enter value for destination: Wardha
+Enter value for coachtype: NonAC
+old   1: insert into bus values(&busno,'&source','&destination','&coachtype')
+new   1: insert into bus values(102,'Nagpur','Wardha','NonAC')
+
+1 row created.
+
+SQL> /
+Enter value for busno: 103
+Enter value for source: Pune
+Enter value for destination: Mumbai
+Enter value for coachtype: AC
+old   1: insert into bus values(&busno,'&source','&destination','&coachtype')
+new   1: insert into bus values(103,'Pune','Mumbai','AC')
+
+1 row created.
+
+SQL> /
+Enter value for busno: 104
+Enter value for source: Wardha
+Enter value for destination: Nagpur
+Enter value for coachtype: NonAC
+old   1: insert into bus values(&busno,'&source','&destination','&coachtype')
+new   1: insert into bus values(104,'Wardha','Nagpur','NonAC')
+
+1 row created.
+
+SQL> /
+Enter value for busno: 105
+Enter value for source: Mumbai
+Enter value for destination: Pune
+Enter value for coachtype: AC
+old   1: insert into bus values(&busno,'&source','&destination','&coachtype')
+new   1: insert into bus values(105,'Mumbai','Pune','AC')
+
+1 row created.
+
+SQL> select * from bus
+  2  ;
+
+     BUSNO SOURCE          DEST            COACH                                
+---------- --------------- --------------- -----                                
+       101 Nagpur          Pune            AC                                   
+       102 Nagpur          Wardha          NonAC                                
+       103 Pune            Mumbai          AC                                   
+       104 Wardha          Nagpur          NonAC                                
+       105 Mumbai          Pune            AC                                   
+
+SQL> insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost);
+Enter value for ticketno: 901
+Enter value for doj: 18-sep-2023
+Enter value for busno: 101
+Enter value for seatno: 33
+Enter value for source: Nagpur
+Enter value for destination: Pune
+Enter value for cost: 399
+old   1: insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost)
+new   1: insert into ticket values(901,'18-sep-2023',101,33,'Nagpur','Pune',399)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 902
+Enter value for doj: 21-sep-2023
+Enter value for busno: 102
+Enter value for seatno: 45
+Enter value for source: Nagpur
+Enter value for destination: Wardha
+Enter value for cost: 115
+old   1: insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost)
+new   1: insert into ticket values(902,'21-sep-2023',102,45,'Nagpur','Wardha',115)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 903
+Enter value for doj: 23-sep-2023
+Enter value for busno: 103
+Enter value for seatno: 77
+Enter value for source: Pune
+Enter value for destination: Mumbai
+Enter value for cost: 699
+old   1: insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost)
+new   1: insert into ticket values(903,'23-sep-2023',103,77,'Pune','Mumbai',699)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 904
+Enter value for doj: 23-sep-2023
+Enter value for busno: 103
+Enter value for seatno: 65
+Enter value for source: Pune
+Enter value for destination: Mumbai
+Enter value for cost: 699
+old   1: insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost)
+new   1: insert into ticket values(904,'23-sep-2023',103,65,'Pune','Mumbai',699)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 905
+Enter value for doj: 4-oct-2023
+Enter value for busno: 105
+Enter value for seatno: 42
+Enter value for source: Mumbai
+Enter value for destination: Pune
+Enter value for cost: 899
+old   1: insert into ticket values(&ticketno,'&doj',&busno,&seatno,'&source','&destination',&cost)
+new   1: insert into ticket values(905,'4-oct-2023',105,42,'Mumbai','Pune',899)
+
+1 row created.
+
+SQL> select * from ticket;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                 
+---------- --------- ---------- ---------- --------------- ---------------      
+      COST                                                                      
+----------                                                                      
+       901 18-SEP-23        101         33 Nagpur          Pune                 
+       399                                                                      
+                                                                                
+       902 21-SEP-23        102         45 Nagpur          Wardha               
+       115                                                                      
+                                                                                
+       903 23-SEP-23        103         77 Pune            Mumbai               
+       699                                                                      
+                                                                                
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                 
+---------- --------- ---------- ---------- --------------- ---------------      
+      COST                                                                      
+----------                                                                      
+       904 23-SEP-23        103         65 Pune            Mumbai               
+       699                                                                      
+                                                                                
+       905 04-OCT-23        105         42 Mumbai          Pune                 
+       899                                                                      
+                                                                                
+
+SQL> Set linewidth 400;
+SP2-0158: unknown SET option "linewidth"
+SQL> Set pagesize 200;
+SQL> Set linesize 400;
+SQL> set pagesize 200;
+SQL> select * from ticket;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                  COST                                                                                                                                                                                                                                                                                                                           
+---------- --------- ---------- ---------- --------------- --------------- ----------                                                                                                                                                                                                                                                                                                                           
+       901 18-SEP-23        101         33 Nagpur          Pune                   399                                                                                                                                                                                                                                                                                                                           
+       902 21-SEP-23        102         45 Nagpur          Wardha                 115                                                                                                                                                                                                                                                                                                                           
+       903 23-SEP-23        103         77 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       904 23-SEP-23        103         65 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       905 04-OCT-23        105         42 Mumbai          Pune                   899                                                                                                                                                                                                                                                                                                                           
+
+SQL> set linesize 400
+SQL> set pagesize 200
+SQL> select * from ticket
+  2  ;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                  COST                                                                                                                                                                                                                                                                                                                           
+---------- --------- ---------- ---------- --------------- --------------- ----------                                                                                                                                                                                                                                                                                                                           
+       901 18-SEP-23        101         33 Nagpur          Pune                   399                                                                                                                                                                                                                                                                                                                           
+       902 21-SEP-23        102         45 Nagpur          Wardha                 115                                                                                                                                                                                                                                                                                                                           
+       903 23-SEP-23        103         77 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       904 23-SEP-23        103         65 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       905 04-OCT-23        105         42 Mumbai          Pune                   899                                                                                                                                                                                                                                                                                                                           
+
+SQL> insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age);
+Enter value for passportid: 11111
+Enter value for name: Supraj
+Enter value for ticketno: 901
+Enter value for contactno: 8989898989
+Enter value for gender: M
+Enter value for age: 21
+old   1: insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age)
+new   1: insert into passenger values(11111,'Supraj',901,8989898989,'M',21)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: 22222
+Enter value for name: Yash
+Enter value for ticketno: 903
+Enter value for contactno: 7676767676
+Enter value for gender: M
+Enter value for age: 32
+old   1: insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age)
+new   1: insert into passenger values(22222,'Yash',903,7676767676,'M',32)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: 44444
+Enter value for name: Arya
+Enter value for ticketno: 902
+Enter value for contactno: 9595959595
+Enter value for gender: F
+Enter value for age: 28
+old   1: insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age)
+new   1: insert into passenger values(44444,'Arya',902,9595959595,'F',28)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: 77777
+Enter value for name: Atharva
+Enter value for ticketno: 904
+Enter value for contactno: 9797979797
+Enter value for gender: M
+Enter value for age: 30
+old   1: insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age)
+new   1: insert into passenger values(77777,'Atharva',904,9797979797,'M',30)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: 55555
+Enter value for name: Rohit
+Enter value for ticketno: 905
+Enter value for contactno: 8686868686
+Enter value for gender: M
+Enter value for age: 22
+old   1: insert into passenger values(&passportid,'&name',&ticketno,&contactno,'&gender',&age)
+new   1: insert into passenger values(55555,'Rohit',905,8686868686,'M',22)
+
+1 row created.
+
+SQL> select * from passenger;
+
+PASSP NAME              TICKETNO  CONTACTNO G        AGE                                                                                                                                                                                                                                                                                                                                                        
+----- --------------- ---------- ---------- - ----------                                                                                                                                                                                                                                                                                                                                                        
+11111 Supraj                 901 8989898989 M         21                                                                                                                                                                                                                                                                                                                                                        
+22222 Yash                   903 7676767676 M         32                                                                                                                                                                                                                                                                                                                                                        
+44444 Arya                   902 9595959595 F         28                                                                                                                                                                                                                                                                                                                                                        
+77777 Atharva                904 9797979797 M         30                                                                                                                                                                                                                                                                                                                                                        
+55555 Rohit                  905 8686868686 M         22                                                                                                                                                                                                                                                                                                                                                        
+
+SQL> insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno);
+Enter value for pnrno: 12121
+Enter value for doj: 19-sep-2023
+Enter value for no_of_seats: 66
+Enter value for busno: 101
+old   1: insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno)
+new   1: insert into reservation values(12121,'19-sep-2023',66,101)
+
+1 row created.
+
+SQL> /
+Enter value for pnrno: 32323
+Enter value for doj: 20-sep-2023
+Enter value for no_of_seats: 88
+Enter value for busno: 102
+old   1: insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno)
+new   1: insert into reservation values(32323,'20-sep-2023',88,102)
+
+1 row created.
+
+SQL> 
+SQL> /
+Enter value for pnrno: 45454
+Enter value for doj: 25-sep-2023
+Enter value for no_of_seats: 55
+Enter value for busno: 103
+old   1: insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno)
+new   1: insert into reservation values(45454,'25-sep-2023',55,103)
+
+1 row created.
+
+SQL> /
+Enter value for pnrno: 67676
+Enter value for doj: 4-oct-2023
+Enter value for no_of_seats: 85
+Enter value for busno: 104
+old   1: insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno)
+new   1: insert into reservation values(67676,'4-oct-2023',85,104)
+
+1 row created.
+
+SQL> /
+Enter value for pnrno: 89898
+Enter value for doj: 3-nov-2023
+Enter value for no_of_seats: 65
+Enter value for busno: 105
+old   1: insert into reservation values(&pnrno,'&doj',&no_of_seats,&busno)
+new   1: insert into reservation values(89898,'3-nov-2023',65,105)
+
+1 row created.
+
+SQL> select * from reservation;
+
+     PNRNO DOJ        NOOFSEATS      BUSNO                                                                                                                                                                                                                                                                                                                                                                      
+---------- --------- ---------- ----------                                                                                                                                                                                                                                                                                                                                                                      
+     12121 19-SEP-23         66        101                                                                                                                                                                                                                                                                                                                                                                      
+     32323 20-SEP-23         88        102                                                                                                                                                                                                                                                                                                                                                                      
+     45454 25-SEP-23         55        103                                                                                                                                                                                                                                                                                                                                                                      
+     67676 04-OCT-23         85        104                                                                                                                                                                                                                                                                                                                                                                      
+     89898 03-NOV-23         65        105                                                                                                                                                                                                                                                                                                                                                                      
+
+SQL> select * from passenger
+  2  ;
+
+PASSP NAME              TICKETNO  CONTACTNO G        AGE                                                                                                                                                                                                                                                                                                                                                        
+----- --------------- ---------- ---------- - ----------                                                                                                                                                                                                                                                                                                                                                        
+11111 Supraj                 901 8989898989 M         21                                                                                                                                                                                                                                                                                                                                                        
+22222 Yash                   903 7676767676 M         32                                                                                                                                                                                                                                                                                                                                                        
+44444 Arya                   902 9595959595 F         28                                                                                                                                                                                                                                                                                                                                                        
+77777 Atharva                904 9797979797 M         30                                                                                                                                                                                                                                                                                                                                                        
+55555 Rohit                  905 8686868686 M         22                                                                                                                                                                                                                                                                                                                                                        
+
+SQL> select * from ticket;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                  COST                                                                                                                                                                                                                                                                                                                           
+---------- --------- ---------- ---------- --------------- --------------- ----------                                                                                                                                                                                                                                                                                                                           
+       901 18-SEP-23        101         33 Nagpur          Pune                   399                                                                                                                                                                                                                                                                                                                           
+       902 21-SEP-23        102         45 Nagpur          Wardha                 115                                                                                                                                                                                                                                                                                                                           
+       903 23-SEP-23        103         77 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       904 23-SEP-23        103         65 Pune            Mumbai                 699                                                                                                                                                                                                                                                                                                                           
+       905 04-OCT-23        105         42 Mumbai          Pune                   899                                                                                                                                                                                                                                                                                                                           
+
+SQL> select * from bus;
+
+     BUSNO SOURCE          DEST            COACH                                                                                                                                                                                                                                                                                                                                                                
+---------- --------------- --------------- -----                                                                                                                                                                                                                                                                                                                                                                
+       101 Nagpur          Pune            AC                                                                                                                                                                                                                                                                                                                                                                   
+       102 Nagpur          Wardha          NonAC                                                                                                                                                                                                                                                                                                                                                                
+       103 Pune            Mumbai          AC                                                                                                                                                                                                                                                                                                                                                                   
+       104 Wardha          Nagpur          NonAC                                                                                                                                                                                                                                                                                                                                                                
+       105 Mumbai          Pune            AC                                                                                                                                                                                                                                                                                                                                                                   
+
+
+SQL> desc bus
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                     NOT NULL NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+
+SQL> desc ticket
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                  NOT NULL NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(5,2)
+
+SQL> desc passenger
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                NOT NULL CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ CONTACTNO                                          NUMBER(10)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+
+SQL> desc reservation
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                     NOT NULL NUMBER(5)
+ DOJ                                                DATE
+ NOOFSEATS                                          NUMBER(2)
+ BUSNO                                              NUMBER(3)
+
+SQL> spool off;

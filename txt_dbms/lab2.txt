@@ -1,0 +1,689 @@
+Roll no: 42
+Name: Godwin Shalom
+Sem/Sec: V-B
+Batch: B3
+
+SQL> create table bus1 as (select * from bus);
+
+Table created.
+
+SQL> desc bus1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                              NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+
+SQL> create table ticket1 as (select * from ticket);
+
+Table created.
+
+SQL> create table passenger1 as (select * from passenger);
+
+Table created.
+
+SQL> create table reservation1 as (select * from reservation);
+
+Table created.
+
+SQL> desc ticket
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                  NOT NULL NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(5,2)
+
+SQL> desc ticket1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                           NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(5,2)
+
+SQL> desc passenger1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                         CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ CONTACTNO                                          NUMBER(10)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+
+SQL> desc reservation1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                              NUMBER(5)
+ DOJ                                                DATE
+ NOOFSEATS                                          NUMBER(2)
+ BUSNO                                              NUMBER(3)
+
+SQL> alter table bus1 drop(dest);
+
+Table altered.
+
+SQL> desc bus1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                              NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+
+SQL> alter table ticket1 drop(cost);
+
+Table altered.
+
+SQL> desc ticket1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                           NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+
+SQL> alter table passenger1 drop(contactno);
+
+Table altered.
+
+SQL> desc passenger1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                         CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+
+SQL> alter table reservation1 drop(noofseats);
+
+Table altered.
+
+SQL> desc reservation1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                              NUMBER(5)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+
+SQL> alter table bus1 add dest varchar2(15) not null;
+
+Table altered.
+
+SQL> desc bus1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                              NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+ DEST                                      NOT NULL VARCHAR2(15)
+
+SQL> alter table ticket1 add cost decimal(5,2);
+
+Table altered.
+
+SQL> desc ticket1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                           NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(5,2)
+
+SQL> alter table passenger1 add contactno number(10);
+
+Table altered.
+
+SQL> desc passenger1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                         CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+ CONTACTNO                                          NUMBER(10)
+
+SQL> alter table reservation1 add no_of_seats number(2);
+
+Table altered.
+
+
+SQL> alter table bus1 modify dest char(10);
+
+Table altered.
+
+SQL> desc bus1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                              NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+ DEST                                      NOT NULL CHAR(10)
+
+SQL> alter table ticket1 modify cost number(3);
+
+Table altered.
+
+SQL> alter table passenger1 modify gender varchar2(6);
+
+Table altered.
+
+
+SQL> alter table reservation1 modify no_of_seats int;
+
+Table altered.
+SQL> select * from bus1;
+
+no rows selected
+
+SQL> desc bus1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                              NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+ DEST                                      NOT NULL CHAR(10)
+
+
+
+SQL> alter table bus1 add constraint bus1_pk_busno primary key(busno);
+
+Table altered.
+
+
+SQL> alter table ticket1 add constraint ticket1_pk_ticketno primary key(ticketno);
+
+Table altered.
+
+SQL> alter table passenger1 add constraint passenger1_pk_passportid primary key(passportid);
+
+Table altered.
+
+SQL> alter table reservation1 add constraint reservation1_pk_pnrno primary key(pnrno);
+
+Table altered.
+
+SQL> alter table bus1 drop constraint bus1_pk_busno;
+
+Table altered.
+
+SQL> alter table bus1 add constraint bus1_pk_busno primary key(busno);
+
+Table altered.
+
+SQL> alter table ticket1 add constraint ticket1_fk_busno foreign key(busno) references bus1(busno);
+
+Table altered.
+
+SQL> alter table passenger1 add constraint passenger1_fk_busno foreign key(ticketno) references ticket1(ticketno);
+
+Table altered.
+
+SQL> alter table reservation1 add constraint reservation1_fk_busno foreign key(busno) references bus1(busno);
+
+Table altered.
+
+
+SQL> alter table reservation1 disable constraint reservation1_fk_busno;
+
+Table altered.
+
+SQL> alter table reservation1 enable constraint reservation1_fk_busno;
+
+Table altered.
+
+
+SQL> insert into bus values(101,'Nagpur','Wardha','NonAC');
+
+1 row created.
+
+SQL> alter table reservation1 enable constraint reservation1_fk_busno;
+
+Table altered.
+
+SQL> desc reservation
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                     NOT NULL NUMBER(5)
+ DOJ                                                DATE
+ NOOFSEATS                                          NUMBER(2)
+ BUSNO                                              NUMBER(3)
+
+
+SQL> desc bus1;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                     NOT NULL NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACHTYPE                                          VARCHAR2(5)
+ DEST                                      NOT NULL CHAR(10)
+
+SQL> insert into bus1 values(101,'Nagpur','NonAC','Wardha');
+
+1 row created.
+
+
+SQL> select * from bus1;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       101 Nagpur          NonAC Wardha                                         
+
+
+SQL> desc reservation1
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                     NOT NULL NUMBER(5)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ NO_OF_SEATS                                        NUMBER(38)
+
+SQL> insert into reservation1 values(33333,'23-sep-2023',101,55);
+
+1 row created.
+
+
+SQL> alter table reservation1 disable constraint reservation1_fk_busno;
+
+Table altered.
+
+SQL> insert into reservation1 values(44444,'23-sep-2023',102,55);
+
+1 row created.
+
+SQL> insert into bus1 values(102,'Nagpur','AC','Pune');
+
+1 row created.
+
+SQL> alter table reservation1 enable constraint reservation1_fk_busno;
+
+Table altered.
+
+
+
+SQL> alter table reservation1 drop constraint reservation1_fk_busno;
+
+Table altered.
+
+SQL> alter table reservation1 add constraint reservtion1_fk foreign key(busno) references bus1(busno) on delete cascade;
+
+Table altered.
+
+SQL> select * from bus1;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       101 Nagpur          NonAC Wardha                                         
+       102 Nagpur          AC    Pune                                           
+
+SQL> select * from reservation1;
+
+     PNRNO DOJ            BUSNO NO_OF_SEATS                                     
+---------- --------- ---------- -----------                                     
+     33333 23-SEP-23        101          55                                     
+     44444 23-SEP-23        102          55                                     
+
+SQL> delete from bus1 where busno=101;
+
+1 row deleted.
+
+SQL> select * from bus1;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Pune                                           
+
+SQL> select * from reservation1;
+
+     PNRNO DOJ            BUSNO NO_OF_SEATS                                     
+---------- --------- ---------- -----------                                     
+     44444 23-SEP-23        102          55                                     
+
+
+
+SQL> alter table reservation1 drop constraint reservtion1_fk;
+
+Table altered.
+
+SQL> alter table reservation1 add constraint reservation1_fk foreign key(busno) references bus1(busno) on delete set null;
+
+Table altered.
+
+SQL> select * from bus1;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Pune                                           
+
+SQL> delete from bus1 where busno=102;
+
+1 row deleted.
+
+SQL> select * from reservation1;
+
+     PNRNO DOJ            BUSNO NO_OF_SEATS                                     
+---------- --------- ---------- -----------                                     
+     44444 23-SEP-23                     55                                     
+
+SQL> alter table bus1 rename to bus2;
+
+Table altered.
+
+SQL> alter table ticket1 rename to ticket2;
+
+Table altered.
+
+SQL> alter table passenger1 rename to passenger2;
+
+Table altered.
+
+SQL> alter table reservation1 rename to reservation2;
+
+Table altered.
+
+SQL> alter table bus2 rename column coachtype to coach;
+
+Table altered.
+
+SQL> desc bus2;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUSNO                                     NOT NULL NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ COACH                                              VARCHAR2(5)
+ DEST                                      NOT NULL CHAR(10)
+
+SQL> insert into bus2 values(&BUSNO,'&SOURCE','&COACH','&DEST');
+Enter value for busno: 101
+Enter value for source: Nagpur
+Enter value for coach: AC
+Enter value for dest: Pune
+old   1: insert into bus2 values(&BUSNO,'&SOURCE','&COACH','&DEST')
+new   1: insert into bus2 values(101,'Nagpur','AC','Pune')
+
+1 row created.
+
+SQL> /
+Enter value for busno: 102
+Enter value for source: Nagpur
+Enter value for coach: AC
+Enter value for dest: Mumbai
+old   1: insert into bus2 values(&BUSNO,'&SOURCE','&COACH','&DEST')
+new   1: insert into bus2 values(102,'Nagpur','AC','Mumbai')
+
+1 row created.
+
+SQL> /
+Enter value for busno: 103
+Enter value for source: Pune
+Enter value for coach: NonAC
+Enter value for dest: Mumbai
+old   1: insert into bus2 values(&BUSNO,'&SOURCE','&COACH','&DEST')
+new   1: insert into bus2 values(103,'Pune','NonAC','Mumbai')
+
+1 row created.
+
+SQL> desc ticket2;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TICKETNO                                  NOT NULL NUMBER(3)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ SEATNO                                             NUMBER(3)
+ SOURCE                                    NOT NULL VARCHAR2(15)
+ DEST                                      NOT NULL VARCHAR2(15)
+ COST                                               NUMBER(3)
+
+SQL> insert into ticket2 values(&ticketno,'&doj',&busno,&seatno,'&source','&dest',&cost);
+Enter value for ticketno: 01
+Enter value for doj: 3-oct-2023
+Enter value for busno: 101
+Enter value for seatno: 33
+Enter value for source: Nagpur
+Enter value for dest: Pune
+Enter value for cost: 115
+old   1: insert into ticket2 values(&ticketno,'&doj',&busno,&seatno,'&source','&dest',&cost)
+new   1: insert into ticket2 values(01,'3-oct-2023',101,33,'Nagpur','Pune',115)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 2
+Enter value for doj: 4-oct-2023
+Enter value for busno: 102
+Enter value for seatno: 44
+Enter value for source: Nagpur
+Enter value for dest: Mumbai
+Enter value for cost: 500
+old   1: insert into ticket2 values(&ticketno,'&doj',&busno,&seatno,'&source','&dest',&cost)
+new   1: insert into ticket2 values(2,'4-oct-2023',102,44,'Nagpur','Mumbai',500)
+
+1 row created.
+
+SQL> /
+Enter value for ticketno: 3
+Enter value for doj: 5-oct-2023
+Enter value for busno: 103
+Enter value for seatno: 43
+Enter value for source: Pune
+Enter value for dest: Mumbai
+Enter value for cost: 399
+old   1: insert into ticket2 values(&ticketno,'&doj',&busno,&seatno,'&source','&dest',&cost)
+new   1: insert into ticket2 values(3,'5-oct-2023',103,43,'Pune','Mumbai',399)
+
+1 row created.
+
+SQL> desc passenger
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                NOT NULL CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ CONTACTNO                                          NUMBER(10)
+ GENDER                                             CHAR(1)
+ AGE                                                NUMBER(2)
+
+SQL> commit
+  2  ;
+
+Commit complete.
+
+SQL> desc passenger2;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PASSPORTID                                NOT NULL CHAR(5)
+ NAME                                      NOT NULL VARCHAR2(15)
+ TICKETNO                                           NUMBER(3)
+ GENDER                                             VARCHAR2(6)
+ AGE                                                NUMBER(2)
+ CONTACTNO                                          NUMBER(10)
+
+SQL> insert into passenger2 values('&passportid','&name',&ticketno,'&gender',&age,&contactno);
+Enter value for passportid: a1111
+Enter value for name: Yash
+Enter value for ticketno: 01
+Enter value for gender: Male
+Enter value for age: 22
+Enter value for contactno: 2323232323
+old   1: insert into passenger2 values('&passportid','&name',&ticketno,'&gender',&age,&contactno)
+new   1: insert into passenger2 values('a1111','Yash',01,'Male',22,2323232323)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: a1212
+Enter value for name: Supraj
+Enter value for ticketno: 02
+Enter value for gender: Male
+Enter value for age: 32
+Enter value for contactno: 4545454545
+old   1: insert into passenger2 values('&passportid','&name',&ticketno,'&gender',&age,&contactno)
+new   1: insert into passenger2 values('a1212','Supraj',02,'Male',32,4545454545)
+
+1 row created.
+
+SQL> /
+Enter value for passportid: b1111
+Enter value for name: Rohit
+Enter value for ticketno: 03
+Enter value for gender: Male
+Enter value for age: 21
+Enter value for contactno: 8989889898
+old   1: insert into passenger2 values('&passportid','&name',&ticketno,'&gender',&age,&contactno)
+new   1: insert into passenger2 values('b1111','Rohit',03,'Male',21,8989889898)
+
+1 row created.
+
+SQL> desc reservation2;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNRNO                                     NOT NULL NUMBER(5)
+ DOJ                                                DATE
+ BUSNO                                              NUMBER(3)
+ NO_OF_SEATS                                        NUMBER(38)
+
+SQL> insert into reservation2 values(&pnrno,'&doj',&busno,&no_of_seats);
+Enter value for pnrno: 11111
+Enter value for doj: 3-oct-2023
+Enter value for busno: 101
+Enter value for no_of_seats: 55
+old   1: insert into reservation2 values(&pnrno,'&doj',&busno,&no_of_seats)
+new   1: insert into reservation2 values(11111,'3-oct-2023',101,55)
+
+1 row created.
+
+SQL> /
+Enter value for pnrno: 22222
+Enter value for doj: 4-oct-2023
+Enter value for busno: 102
+Enter value for no_of_seats: 55
+old   1: insert into reservation2 values(&pnrno,'&doj',&busno,&no_of_seats)
+new   1: insert into reservation2 values(22222,'4-oct-2023',102,55)
+
+1 row created.
+
+SQL> /
+Enter value for pnrno: 33333
+Enter value for doj: 05-oct-2023
+Enter value for busno: 103
+Enter value for no_of_seats: 65
+old   1: insert into reservation2 values(&pnrno,'&doj',&busno,&no_of_seats)
+new   1: insert into reservation2 values(33333,'05-oct-2023',103,65)
+
+1 row created.
+
+SQL> select * from bus2;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Mumbai                                         
+       103 Pune            NonAC Mumbai                                         
+       101 Nagpur          AC    Pune                                           
+
+SQL> select * from ticket2;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                 
+---------- --------- ---------- ---------- --------------- ---------------      
+      COST                                                                      
+----------                                                                      
+         1 03-OCT-23        101         33 Nagpur          Pune                 
+       115                                                                      
+                                                                                
+         2 04-OCT-23        102         44 Nagpur          Mumbai               
+       500                                                                      
+                                                                                
+         3 05-OCT-23        103         43 Pune            Mumbai               
+       399                                                                      
+                                                                                
+
+SQL> update bus2 set dest='Wardha' where dest='Pune';
+
+1 row updated.
+
+SQL> update ticket2 set dest='Wardha' where dest='Pune';
+
+1 row updated.
+
+SQL> select * from bus2;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Mumbai                                         
+       103 Pune            NonAC Mumbai                                         
+       101 Nagpur          AC    Wardha                                         
+
+SQL> select * from ticket2;
+
+  TICKETNO DOJ            BUSNO     SEATNO SOURCE          DEST                 
+---------- --------- ---------- ---------- --------------- ---------------      
+      COST                                                                      
+----------                                                                      
+         1 03-OCT-23        101         33 Nagpur          Wardha               
+       115                                                                      
+                                                                                
+         2 04-OCT-23        102         44 Nagpur          Mumbai               
+       500                                                                      
+                                                                                
+         3 05-OCT-23        103         43 Pune            Mumbai               
+       399                                                                      
+                                                                                
+
+SQL> alter table bus2 read only;
+
+Table altered.
+
+SQL> alter table bus2 read write;
+
+Table altered.
+
+SQL> insert into bus2 values(104,'Mumbai','AC','Pune');
+
+1 row created.
+
+SQL> select * from bus2;
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Mumbai                                         
+       103 Pune            NonAC Mumbai                                         
+       101 Nagpur          AC    Wardha                                         
+       104 Mumbai          AC    Pune                                           
+
+SQL> select * from bus2 where source='Nagpur';
+
+     BUSNO SOURCE          COACH DEST                                           
+---------- --------------- ----- ----------                                     
+       102 Nagpur          AC    Mumbai                                         
+       101 Nagpur          AC    Wardha                                         
+
+SQL> select * from passenger2 order by age ;
+
+PASSP NAME              TICKETNO GENDER        AGE  CONTACTNO                   
+----- --------------- ---------- ------ ---------- ----------                   
+b1111 Rohit                    3 Male           21 8989889898                   
+a1111 Yash                     1 Male           22 2323232323                   
+a1212 Supraj                   2 Male           32 4545454545                   
+
+SQL> select * from passenger2 order by age desc;
+
+PASSP NAME              TICKETNO GENDER        AGE  CONTACTNO                   
+----- --------------- ---------- ------ ---------- ----------                   
+a1212 Supraj                   2 Male           32 4545454545                   
+a1111 Yash                     1 Male           22 2323232323                   
+b1111 Rohit                    3 Male           21 8989889898                   
+
+SQL> spool off

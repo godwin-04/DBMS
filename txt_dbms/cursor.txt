@@ -1,0 +1,466 @@
+DECLARE
+e_id emp.empno%type;
+e_name emp.ename%type;
+e_sal emp.sal%type;
+CURSOR c_emp is
+SELECT empno, ename, sal FROM emp;
+BEGIN
+OPEN c_emp;
+LOOP
+FETCH c_emp into e_id, e_name, e_sal;
+EXIT WHEN c_emp%notfound;
+dbms_output.put_line(e_id || ' ' || e_name || ' ' || e_sal);
+END LOOP;
+CLOSE c_emp;
+END;
+
+
+
+create table account(acno number(5),name varchar2(20),balance number(14,2));
+insert into account values(11,'RAJKUMAR',6700);
+insert into account values(12,'KUMAR',1500);
+insert into account values(13,'RAnu',2050);
+insert into account values(14,'R.L',1000);
+select * from account;
+create table failtransaction(acno number(5),balance number(14,2),message varchar2(20));
+desc failtransaction;
+
+
+
+
+DECLARE ac account.acno%type ;
+na account.name%type;
+ba account.balance%type;
+debit_amt number(14,2):=2000;
+cursor c1 is select * from account where acno in (11,12,13); BEGIN
+open c1;
+loop
+fetch c1 into ac,na,ba;
+exit when c1%NOTFOUND;
+IF ba-debit_amt>= 1000 THEN
+UPDATE account SET balance = balance - debit_amt WHERE acno = ac;
+ELSE
+INSERT INTO failtransaction VALUES(ac, ba, 'Insufficient funds');
+END IF;
+end loop;
+COMMIT;
+close c1;
+END;
+/
+select * from failtransaction;
+
+
+
+
+
+
+SQL> set serveroutput on
+SQL> declare
+  2  ;
+  3  /
+;
+*
+ERROR at line 2:
+ORA-06550: line 2, column 1:
+PLS-00103: Encountered the symbol ";" when expecting one of the following:
+begin function pragma procedure subtype type <an identifier>
+<a double-quoted delimited-identifier> current cursor delete
+exists prior
+
+
+SQL> desc emp;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> declare
+  2  total_rows number(2);
+  3  begin
+  4  update emp set sal=sal+500;
+  5  if sql%notfound then
+  6  dbms_ouptut.put_line('no emp selected
+  7  ');
+  8  elsif sql%found then
+  9  total_rows:=sql%rowcount;
+ 10  dbms_output.put_line(total_rows || 'emp selected');
+ 11  end if;
+ 12  end;
+ 13  /
+dbms_ouptut.put_line('no emp selected
+*
+ERROR at line 6:
+ORA-06550: line 6, column 1:
+PLS-00201: identifier 'DBMS_OUPTUT.PUT_LINE' must be declared
+ORA-06550: line 6, column 1:
+PL/SQL: Statement ignored
+
+
+SQL> declare
+  2  total_rows number(2);
+  3  begin
+  4  update emp set sal=sal+500;
+  5  if sql%notfound then
+  6  dbms_output.put_line('no emp selected');
+  7  elsif sql%found then
+  8  total_rows:=sql%rowcount;
+  9  dbms_output.put_line(total_rows || 'emp selected');
+ 10  end if;
+ 11  end;
+ 12
+ 13  /
+14emp selected
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2  e_id emp.empno%type;
+  3  e_name emp.ename%type;
+  4  e_sal emp.sal%type;
+  5  CURSOR c_emp is
+  6  SELECT empno, ename, sal FROM emp;
+  7  BEGIN
+  8  OPEN c_emp;
+  9  LOOP
+ 10  FETCH c_emp into e_id, e_name, e_sal;
+ 11  EXIT WHEN c_emp%notfound;
+ 12  dbms_output.put_line(e_id || ' ' || e_name || ' ' || e_sal);
+ 13  END LOOP;
+ 14  CLOSE c_emp;
+ 15  END;
+ 16  /
+7369 SMITH 1800
+7499 ALLEN 2100
+7521 WARD 1750
+7566 JONES 3975
+7654 MARTIN 1750
+7698 BLAKE 3350
+7782 CLARK 3450
+7788 SCOTT 4000
+7839 KING 6000
+7844 TURNER 2000
+7876 ADAMS 2100
+7900 JAMES 1450
+7902 FORD 4000
+7934 MILLER 2300
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from emp
+  2  ;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7369 SMITH      CLERK           7902 17-DEC-80       1800
+        20
+
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2100        300
+        30
+
+      7521 WARD       SALESMAN        7698 22-FEB-81       1750        500
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7566 JONES      MANAGER         7839 02-APR-81       3975
+        20
+
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1750       1400
+        30
+
+      7698 BLAKE      MANAGER         7839 01-MAY-81       3350
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450
+        10
+
+      7788 SCOTT      ANALYST         7566 19-APR-87       4000
+        20
+
+      7839 KING       PRESIDENT            17-NOV-81       6000
+        10
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7844 TURNER     SALESMAN        7698 08-SEP-81       2000          0
+        30
+
+      7876 ADAMS      CLERK           7788 23-MAY-87       2100
+        20
+
+      7900 JAMES      CLERK           7698 03-DEC-81       1450
+        30
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
+---------- ---------- --------- ---------- --------- ---------- ----------
+    DEPTNO
+----------
+      7902 FORD       ANALYST         7566 03-DEC-81       4000
+        20
+
+      7934 MILLER     CLERK           7782 23-JAN-82       2300
+        10
+
+
+14 rows selected.
+
+SQL> set linesize 200
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80       1800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2100        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1750        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       3975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1750       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       3350                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       4000                    20
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       2000          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       2100                    20
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7900 JAMES      CLERK           7698 03-DEC-81       1450                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       4000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       2300                    10
+
+14 rows selected.
+
+SQL> set pagesize 400
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH      CLERK           7902 17-DEC-80       1800                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       2100        300         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1750        500         30
+      7566 JONES      MANAGER         7839 02-APR-81       3975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1750       1400         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       3350                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       3450                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       4000                    20
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10
+      7844 TURNER     SALESMAN        7698 08-SEP-81       2000          0         30
+      7876 ADAMS      CLERK           7788 23-MAY-87       2100                    20
+      7900 JAMES      CLERK           7698 03-DEC-81       1450                    30
+      7902 FORD       ANALYST         7566 03-DEC-81       4000                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       2300                    10
+
+14 rows selected.
+
+SQL> DECLARE
+  2  e_id emp.empno%type;
+  3  e_name emp.ename%type;
+  4  e_sal emp.sal%type;
+  5  CURSOR c_emp is
+  6  SELECT empno, ename, sal FROM emp;
+  7  BEGIN
+  8  OPEN c_emp;
+  9  LOOP
+ 10  FETCH c_emp into e_id, e_name, e_sal;
+ 11  EXIT WHEN c_emp%notfound;
+ 12  dbms_output.put_line(e_id || ' ' || e_name || ' ' || e_sal);
+ 13  END LOOP;
+ 14  CLOSE c_emp;
+ 15  END;
+ 16  /
+7369 SMITH 1800
+7499 ALLEN 2100
+7521 WARD 1750
+7566 JONES 3975
+7654 MARTIN 1750
+7698 BLAKE 3350
+7782 CLARK 3450
+7788 SCOTT 4000
+7839 KING 6000
+7844 TURNER 2000
+7876 ADAMS 2100
+7900 JAMES 1450
+7902 FORD 4000
+7934 MILLER 2300
+
+PL/SQL procedure successfully completed.
+
+SQL> create table emp2(
+  2  id number,
+  3  name char(20),
+  4  salary number);
+
+Table created.
+
+SQL> drop tablw emp2;
+drop tablw emp2
+     *
+ERROR at line 1:
+ORA-00950: invalid DROP option
+
+
+SQL> drop table emp2;
+
+Table dropped.
+
+SQL> create table emp1 as select empno,ename,sal from emp;
+
+Table created.
+
+SQL> truncate table emp1;
+
+Table truncated.
+
+SQL> select * from emp1;
+
+no rows selected
+
+SQL> declare
+  2  eid emp.empno%type;
+  3  ename emp.ename%type;
+  4  sal emp.sal%type;
+  5  cursor c is
+  6  select empno,ename,sal from emp;
+  7  begin
+  8  open c
+  9  loop
+ 10  fetch c into eid,ename,sal;
+ 11  exit when c%notfound;
+ 12  insert into emp1 values(eid,ename,sal);
+ 13  end loop;
+ 14  close c;
+ 15  end;
+ 16  /
+loop
+*
+ERROR at line 9:
+ORA-06550: line 9, column 1:
+PLS-00103: Encountered the symbol "LOOP" when expecting one of the following:
+. ( % ; for
+
+
+SQL> select * fromemp where sal>4000;
+select * fromemp where sal>4000
+         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select * from emp where sal>4000;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       6000                    10
+
+SQL> create table account(acno number(5),name varchar2(20),balance number(14,2))
+  2  insert into account values(11,'RAJKUMAR',6700)
+  3  insert into account values(12,'KUMAR',1500)
+  4  insert into account values(13,'RAnu',2050)
+  5  insert into account values(14,'R.L',1000)
+  6  select * from account
+  7  create table failtransaction(acno number(5),balance number(14,2),message varchar2(20))
+  8  desc failtransaction;
+insert into account values(11,'RAJKUMAR',6700)
+*
+ERROR at line 2:
+ORA-00922: missing or invalid option
+
+
+SQL> create table account(acno number(5),name varchar2(20),balance number(14,2));
+
+Table created.
+
+SQL> insert into account values(11,'RAJKUMAR',6700);
+
+1 row created.
+
+SQL> insert into account values(12,'KUMAR',1500);
+
+1 row created.
+
+SQL> insert into account values(13,'RAnu',2050);
+
+1 row created.
+
+SQL> insert into account values(14,'R.L',1000);
+
+1 row created.
+
+SQL> select * from account;
+
+      ACNO NAME                    BALANCE
+---------- -------------------- ----------
+        11 RAJKUMAR                   6700
+        12 KUMAR                      1500
+        13 RAnu                       2050
+        14 R.L                        1000
+
+SQL> create table failtransaction(acno number(5),balance number(14,2),message varchar2(20));
+
+Table created.
+
+SQL> desc failtransaction;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ACNO                                                                                                                       NUMBER(5)
+ BALANCE                                                                                                                    NUMBER(14,2)
+ MESSAGE                                                                                                                    VARCHAR2(20)
+
+SQL> DECLARE ac account.acno%type ;
+  2  na account.name%type;
+  3  ba account.balance%type;
+  4  debit_amt number(14,2):=2000;
+  5  cursor c1 is select * from account where acno in (11,12,13); BEGIN
+  6  open c1;
+  7  loop
+  8  fetch c1 into ac,na,ba;
+  9  exit when c1%NOTFOUND;
+ 10  IF ba-debit_amt>= 1000 THEN
+ 11  UPDATE account SET balance = balance - debit_amt WHERE acno = ac;
+ 12  ELSE
+ 13  INSERT INTO failtransaction VALUES(ac, ba, 'Insufficient funds');
+ 14  END IF;
+ 15  end loop;
+ 16  COMMIT;
+ 17  close c1;
+ 18  END;
+ 19  /
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from failtransaction;
+
+      ACNO    BALANCE MESSAGE
+---------- ---------- --------------------
+        12       1500 Insufficient funds
+        13       2050 Insufficient funds
+
+SQL> select * from account;
+
+      ACNO NAME                    BALANCE
+---------- -------------------- ----------
+        11 RAJKUMAR                   4700
+        12 KUMAR                      1500
+        13 RAnu                       2050
+        14 R.L                        1000
+
+SQL>

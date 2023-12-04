@@ -1,0 +1,584 @@
+Roll no: 42
+Name: Godwin Shalom
+SEM/sec: V-B
+Batch: B3
+
+
+1. Write a SQL query to find those employees who get higher salary than the employee
+whose ID is 163. Return first name, last name.
+SQL> SELECT first_name, last_name
+  2  FROM employees
+  3  WHERE salary >
+  4  ( SELECT salary
+  5  FROM employees
+  6  WHERE employee_id=163
+  7  );
+
+FIRST_NAME           LAST_NAME
+-------------------- -------------------------
+Michael              Hartstein
+Hermann              Baer
+Shelley              Higgins
+Steven               King
+Neena                Kochhar
+Lex                  De Haan
+Nancy                Greenberg
+Den                  Raphaely
+John                 Russell
+Karen                Partners
+Alberto              Errazuriz
+Gerald               Cambrault
+Eleni                Zlotkey
+Peter                Tucker
+Janette              King
+Clara                Vishney
+Lisa                 Ozer
+Harrison             Bloom
+Tayler               Fox
+Ellen                Abel
+
+20 rows selected.
+
+
+
+2. write a SQL query to find those employees whose designation is the same as the
+employee whose ID is 169. Return first name, last name, department ID and job ID.
+SQL> SELECT first_name, last_name, salary, department_id, job_id
+  2  FROM employees
+  3  WHERE job_id =
+  4  ( SELECT job_id
+  5  FROM employees
+  6  WHERE employee_id=169
+  7  );
+
+FIRST_NAME           LAST_NAME                     SALARY DEPARTMENT_ID JOB_ID
+-------------------- ------------------------- ---------- ------------- ----------
+Peter                Tucker                         10000            80 SA_REP
+David                Bernstein                       9500            80 SA_REP
+Peter                Hall                            9000            80 SA_REP
+Christopher          Olsen                           8000            80 SA_REP
+Nanette              Cambrault                       7500            80 SA_REP
+Oliver               Tuvault                         7000            80 SA_REP
+Janette              King                           10000            80 SA_REP
+Patrick              Sully                           9500            80 SA_REP
+Allan                McEwen                          9000            80 SA_REP
+Lindsey              Smith                           8000            80 SA_REP
+Louise               Doran                           7500            80 SA_REP
+Sarath               Sewall                          7000            80 SA_REP
+Clara                Vishney                        10500            80 SA_REP
+Danielle             Greene                          9500            80 SA_REP
+Mattea               Marvins                         7200            80 SA_REP
+David                Lee                             6800            80 SA_REP
+Sundar               Ande                            6400            80 SA_REP
+Amit                 Banda                           6200            80 SA_REP
+Lisa                 Ozer                           11500            80 SA_REP
+Harrison             Bloom                          10000            80 SA_REP
+Tayler               Fox                             9600            80 SA_REP
+William              Smith                           7400            80 SA_REP
+Elizabeth            Bates                           7300            80 SA_REP
+Sundita              Kumar                           6100            80 SA_REP
+Ellen                Abel                           11000            80 SA_REP
+Alyssa               Hutton                          8800            80 SA_REP
+Jonathon             Taylor                          8600            80 SA_REP
+Jack                 Livingston                      8400            80 SA_REP
+Kimberely            Grant                           7000            80 SA_REP
+Charles              Johnson                         6200            80 SA_REP
+
+30 rows selected.
+
+
+
+3. Write a SQL query to find those employees whose salary matches the smallest salary of
+any of the departments. Return first name, last name and department ID.
+SQL> SELECT first_name, last_name, salary, department_id
+  2  FROM employees
+  3  WHERE salary IN
+  4  ( SELECT MIN(salary)
+  5  FROM employees
+  6  GROUP BY department_id
+  7  );
+
+FIRST_NAME           LAST_NAME                     SALARY DEPARTMENT_ID
+-------------------- ------------------------- ---------- -------------
+Luis                 Popp                            6900           100
+Randall              Perkins                         2500            50
+Martha               Sullivan                        2500            50
+Peter                Vargas                          2500            50
+Joshua               Patel                           2500            50
+James                Marlow                          2500            50
+Karen                Colmenares                      2500            30
+Bruce                Ernst                           6000            60
+Pat                  Fay                             6000            20
+Harrison             Bloom                          10000            80
+Janette              King                           10000            80
+Peter                Tucker                         10000            80
+Hermann              Baer                           10000            70
+Lex                  De Haan                        17000            90
+Neena                Kochhar                        17000            90
+William              Gietz                           8300           110
+TJ                   Olson                           2100            50
+Shanta               Vollman                         6500            50
+Susan                Mavris                          6500            40
+Sundita              Kumar                           6100            80
+Jennifer             Whalen                          4400            10
+Nandita              Sarchand                        4200            50
+Diana                Lorentz                         4200            60
+
+23 rows selected.
+
+
+
+4. Write a SQL query to find those employees who earn more than the average salary.
+Return employee ID, first name, last name.
+SQL> SELECT employee_id, first_name,last_name
+  2  FROM employees
+  3  WHERE salary >
+  4  ( SELECT AVG(salary)
+  5  FROM employees
+  6  );
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME
+----------- -------------------- -------------------------
+        201 Michael              Hartstein
+        203 Susan                Mavris
+        204 Hermann              Baer
+        205 Shelley              Higgins
+        206 William              Gietz
+        100 Steven               King
+        101 Neena                Kochhar
+        102 Lex                  De Haan
+        103 Alexander            Hunold
+        108 Nancy                Greenberg
+        109 Daniel               Faviet
+        110 John                 Chen
+        111 Ismael               Sciarra
+        112 Jose Manuel          Urman
+        113 Luis                 Popp
+        114 Den                  Raphaely
+        120 Matthew              Weiss
+        121 Adam                 Fripp
+        122 Payam                Kaufling
+        123 Shanta               Vollman
+        145 John                 Russell
+        146 Karen                Partners
+        147 Alberto              Errazuriz
+        148 Gerald               Cambrault
+        149 Eleni                Zlotkey
+        150 Peter                Tucker
+        151 David                Bernstein
+        152 Peter                Hall
+        153 Christopher          Olsen
+        154 Nanette              Cambrault
+        155 Oliver               Tuvault
+        156 Janette              King
+        157 Patrick              Sully
+        158 Allan                McEwen
+        159 Lindsey              Smith
+        160 Louise               Doran
+        161 Sarath               Sewall
+        162 Clara                Vishney
+        163 Danielle             Greene
+        164 Mattea               Marvins
+        165 David                Lee
+        168 Lisa                 Ozer
+        169 Harrison             Bloom
+        170 Tayler               Fox
+        171 William              Smith
+        172 Elizabeth            Bates
+        174 Ellen                Abel
+        175 Alyssa               Hutton
+        176 Jonathon             Taylor
+        177 Jack                 Livingston
+        178 Kimberely            Grant
+
+51 rows selected.
+
+
+
+5. Write a SQL query to find those employees who report that manager whose first name is
+‘Payam’. Return first name, last name, employee ID and salary.
+SQL> SELECT first_name, last_name, employee_id, salary
+  2  FROM employees
+  3  WHERE manager_id IN (
+  4      SELECT employee_id
+  5      FROM employees
+  6      WHERE first_name = 'Payam'
+  7  );
+
+FIRST_NAME           LAST_NAME                 EMPLOYEE_ID     SALARY
+-------------------- ------------------------- ----------- ----------
+Jason                Mallin                            133       3300
+Michael              Rogers                            134       2900
+Ki                   Gee                               135       2400
+Hazel                Philtanker                        136       2200
+Kelly                Chung                             188       3800
+Jennifer             Dilly                             189       3600
+Timothy              Gates                             190       2900
+Randall              Perkins                           191       2500
+
+8 rows selected.
+
+
+
+6. write a SQL query to find all those employees who work in the Finance department.
+Return department ID, name (first name), job ID and department name.
+SQL> SELECT e.department_id, e.first_name, e.job_id , d.department_name
+  2  FROM employees e , departments d
+  3  WHERE e.department_id = d.department_id
+  4  AND  d.department_name = 'Finance';
+
+DEPARTMENT_ID FIRST_NAME           JOB_ID     DEPARTMENT_NAME
+------------- -------------------- ---------- --------------------------------------------------
+          100 Nancy                FI_MGR     Finance
+          100 Daniel               FI_ACCOUNT Finance
+          100 John                 FI_ACCOUNT Finance
+          100 Ismael               FI_ACCOUNT Finance
+          100 Jose Manuel          FI_ACCOUNT Finance
+          100 Luis                 FI_ACCOUNT Finance
+
+6 rows selected.
+
+
+
+7. write a SQL query to find those employees whose ID matches any of the number 134,
+159 and 183. Return all the fields.
+SQL> SELECT *
+  2  FROM employees
+  3  WHERE employee_id IN (134,159,183);
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                                              PHONE_NUMBER         HIRE_DATE JOB_ID
+SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------------------------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        134 Michael              Rogers                    MROGERS                                            650.127.1834         26-AUG-06 ST_CLERK         2900          0        122            50
+        159 Lindsey              Smith                     LSMITH                                             011.44.1345.729268   10-MAR-05 SA_REP
+  8000         .3        146            80
+        183 Girard               Geoni                     GGEONI                                             650.507.9879         03-FEB-08 SH_CLERK         2800          0        120            50
+
+
+
+8. write a SQL query to find those employees whose salary is in the range of smallest
+salary, and 2500. Return all the fields.
+SQL> SELECT *
+  2  FROM employees
+  3  WHERE salary BETWEEN
+  4  (SELECT MIN(salary)
+  5  FROM employees) AND 2500;
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                                              PHONE_NUMBER         HIRE_DATE JOB_ID
+SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------------------------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        119 Karen                Colmenares                KCOLMENA                                           515.127.4566         10-AUG-07 PU_CLERK         2500          0        114            30
+        127 James                Landry                    JLANDRY                                            650.124.1334         14-JAN-07 ST_CLERK         2400          0        120            50
+        128 Steven               Markle                    SMARKLE                                            650.124.1434         08-MAR-08 ST_CLERK         2200          0        120            50
+        131 James                Marlow                    JAMRLOW                                            650.124.7234         16-FEB-05 ST_CLERK         2500          0        121            50
+        132 TJ                   Olson                     TJOLSON                                            650.124.8234         10-APR-07 ST_CLERK         2100          0        121            50
+        135 Ki                   Gee                       KGEE                                               650.127.1734         12-DEC-07 ST_CLERK         2400          0        122            50
+        136 Hazel                Philtanker                HPHILTAN                                           650.127.1634         06-FEB-08 ST_CLERK         2200          0        122            50
+        140 Joshua               Patel                     JPATEL                                             650.121.1834         06-APR-06 ST_CLERK         2500          0        123            50
+        144 Peter                Vargas                    PVARGAS                                            650.121.2004         09-JUL-06 ST_CLERK         2500          0        124            50
+        182 Martha               Sullivan                  MSULLIVA                                           650.507.9878         21-JUN-07 SH_CLERK         2500          0        120            50
+        191 Randall              Perkins                   RPERKINS                                           650.505.4876         19-DEC-07 SH_CLERK         2500          0        122            50
+
+11 rows selected.
+
+
+
+9. write a SQL query to find those employees who do not work in those departments
+where manager ids are in the range 100, 200 (Begin and end values are included.) Return
+all the fields of the employees.
+SQL> SELECT *
+  2  FROM employees
+  3  WHERE department_id NOT IN
+  4  (SELECT department_id
+  5  FROM departments
+  6  WHERE manager_id BETWEEN 100 AND 200);
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                                              PHONE_NUMBER         HIRE_DATE JOB_ID
+SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------------------------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        201 Michael              Hartstein                 MHARTSTE                                           515.123.5555         17-FEB-04 MK_MAN
+ 13000          0        100            20
+        202 Pat                  Fay                       PFAY                                               603.123.6666         17-AUG-05 MK_REP
+  6000          0        201            20
+        203 Susan                Mavris                    SMAVRIS                                            515.123.7777         07-JUN-02 HR_REP
+  6500          0        101            40
+        204 Hermann              Baer                      HBAER                                              515.123.8888         07-JUN-02 PR_REP
+ 10000          0        101            70
+        205 Shelley              Higgins                   SHIGGINS                                           515.123.8080         07-JUN-02 AC_MGR
+ 12008          0        101           110
+        206 William              Gietz                     WGIETZ                                             515.123.8181         07-JUN-02 AC_ACCOUNT       8300          0        205           110
+
+6 rows selected.
+
+
+
+10. write a SQL query to find those employees who get second-highest salary. Return all the
+fields of the employees.
+SQL> SELECT *
+  2  FROM employees
+  3  WHERE employee_id IN
+  4  (SELECT employee_id
+  5  FROM employees
+  6  WHERE salary =
+  7  (SELECT MAX(salary)
+  8  FROM employees
+  9  WHERE salary <
+ 10  (SELECT MAX(salary)
+ 11  FROM employees)));
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                                              PHONE_NUMBER         HIRE_DATE JOB_ID
+SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------------------------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        101 Neena                Kochhar                   NKOCHHAR                                           515.123.4568         21-SEP-05 AD_VP
+ 17000          0        100            90
+        102 Lex                  De Haan                   LDEHAAN                                            515.123.4569         13-JAN-01 AD_VP
+ 17000          0        100            90
+
+
+
+11. write a SQL query to find those employees whose department located at 'Toronto'.
+Return first name, last name, employee ID, job ID.
+SQL> SELECT  first_name, last_name, employee_id, job_id
+  2  FROM employees
+  3  WHERE department_id =
+  4  (SELECT department_id
+  5  FROM departments
+  6  WHERE location_id =
+  7  (SELECT location_id
+  8  FROM locations
+  9  WHERE city ='Toronto'));
+
+FIRST_NAME           LAST_NAME                 EMPLOYEE_ID JOB_ID
+-------------------- ------------------------- ----------- ----------
+Michael              Hartstein                         201 MK_MAN
+Pat                  Fay                               202 MK_REP
+
+
+
+12. write a SQL query to find all those departments where at least one or more employees
+work.Return department name.
+SQL> SELECT  department_name
+  2  FROM departments
+  3  WHERE department_id IN
+  4  (SELECT DISTINCT(department_id)
+  5  FROM employees);
+
+DEPARTMENT_NAME
+--------------------------------------------------
+Shipping
+Administration
+Marketing
+Human Resources
+Public Relations
+Accounting
+Executive
+IT
+Finance
+Purchasing
+Sales
+
+11 rows selected.
+
+
+
+13. write a SQL query to find those employees who work in departments located at 'United
+Kingdom'. Return first name.
+SQL> SELECT first_name
+  2  FROM employees
+  3  WHERE department_id IN
+  4  (SELECT department_id
+  5  FROM departments
+  6  WHERE location_id IN
+  7  (SELECT location_id
+  8  FROM locations
+  9  WHERE country_id =
+ 10  (SELECT country_id
+ 11  FROM countries
+ 12  WHERE country_name='United Kingdom')));
+
+FIRST_NAME
+--------------------
+Susan
+Charles
+Kimberely
+Jack
+Jonathon
+Alyssa
+Ellen
+Sundita
+Elizabeth
+William
+Tayler
+Harrison
+Lisa
+Amit
+Sundar
+David
+Mattea
+Danielle
+Clara
+Sarath
+Louise
+Lindsey
+Allan
+Patrick
+Janette
+Oliver
+Nanette
+Christopher
+Peter
+David
+Peter
+Eleni
+Gerald
+Alberto
+Karen
+John
+
+36 rows selected.
+
+
+
+14. write a SQL query to find those employees who work under a manager based in ‘US’.
+Return first name, last name.
+SQL> SELECT first_name,last_name FROM employees
+  2  WHERE manager_id IN
+  3  (SELECT employee_id
+  4  FROM employees
+  5  WHERE department_id IN
+  6  (SELECT department_id
+  7  FROM departments
+  8  WHERE location_id IN
+  9  (SELECT location_id
+ 10  FROM locations
+ 11  WHERE country_id='US')));
+
+FIRST_NAME           LAST_NAME
+-------------------- -------------------------
+William              Gietz
+Eleni                Zlotkey
+Gerald               Cambrault
+Alberto              Errazuriz
+Karen                Partners
+John                 Russell
+Kevin                Mourgos
+Shanta               Vollman
+Payam                Kaufling
+Adam                 Fripp
+Matthew              Weiss
+Den                  Raphaely
+Lex                  De Haan
+Neena                Kochhar
+Michael              Hartstein
+Nancy                Greenberg
+Shelley              Higgins
+Hermann              Baer
+Susan                Mavris
+Jennifer             Whalen
+Alexander            Hunold
+Diana                Lorentz
+Valli                Pataballa
+David                Austin
+Bruce                Ernst
+Luis                 Popp
+Jose Manuel          Urman
+Ismael               Sciarra
+John                 Chen
+Daniel               Faviet
+Karen                Colmenares
+Guy                  Himuro
+Sigal                Tobias
+Shelli               Baida
+Alexander            Khoo
+Girard               Geoni
+Martha               Sullivan
+Jean                 Fleaur
+Winston              Taylor
+Steven               Markle
+James                Landry
+Irene                Mikkilineni
+Julia                Nayer
+Anthony              Cabrio
+Julia                Dellinger
+Alexis               Bull
+Nandita              Sarchand
+TJ                   Olson
+James                Marlow
+Mozhe                Atkinson
+Laura                Bissot
+Randall              Perkins
+Timothy              Gates
+Jennifer             Dilly
+Kelly                Chung
+Hazel                Philtanker
+Ki                   Gee
+Michael              Rogers
+Jason                Mallin
+Vance                Jones
+Samuel               McCain
+Britney              Everett
+Sarah                Bell
+Joshua               Patel
+John                 Seo
+Stephen              Stiles
+Renske               Ladwig
+Kevin                Feeney
+Alana                Walsh
+Peter                Vargas
+Randall              Matos
+Curtis               Davies
+Trenna               Rajs
+Douglas              Grant
+Donald               OConnell
+
+75 rows selected.
+
+
+
+15. write a SQL query to find those employees who are managers. Return all the fields of
+employees table.
+SQL> SELECT *
+  2  FROM employees
+  3  WHERE employee_id IN
+  4  (SELECT DISTINCT manager_id FROM employees);
+
+EMPLOYEE_ID FIRST_NAME           LAST_NAME                 EMAIL                                              PHONE_NUMBER         HIRE_DATE JOB_ID
+SALARY COMMISSION_PCT MANAGER_ID DEPARTMENT_ID
+----------- -------------------- ------------------------- -------------------------------------------------- -------------------- --------- ---------- ---------- -------------- ---------- -------------
+        201 Michael              Hartstein                 MHARTSTE                                           515.123.5555         17-FEB-04 MK_MAN
+ 13000          0        100            20
+        205 Shelley              Higgins                   SHIGGINS                                           515.123.8080         07-JUN-02 AC_MGR
+ 12008          0        101           110
+        100 Steven               King                      SKING                                              515.123.4567         17-JUN-03 AD_PRES         24000          0          0            90
+        101 Neena                Kochhar                   NKOCHHAR                                           515.123.4568         21-SEP-05 AD_VP
+ 17000          0        100            90
+        102 Lex                  De Haan                   LDEHAAN                                            515.123.4569         13-JAN-01 AD_VP
+ 17000          0        100            90
+        103 Alexander            Hunold                    AHUNOLD                                            590.423.4567         03-JAN-06 IT_PROG          9000          0        102            60
+        108 Nancy                Greenberg                 NGREENBE                                           515.124.4569         17-AUG-02 FI_MGR
+ 12008          0        101           100
+        114 Den                  Raphaely                  DRAPHEAL                                           515.127.4561         07-DEC-02 PU_MAN
+ 11000          0        100            30
+        120 Matthew              Weiss                     MWEISS                                             650.123.1234         18-JUL-04 ST_MAN
+  8000          0        100            50
+        121 Adam                 Fripp                     AFRIPP                                             650.123.2234         10-APR-05 ST_MAN
+  8200          0        100            50
+        122 Payam                Kaufling                  PKAUFLIN                                           650.123.3234         01-MAY-03 ST_MAN
+  7900          0        100            50
+        123 Shanta               Vollman                   SVOLLMAN                                           650.123.4234         10-OCT-05 ST_MAN
+  6500          0        100            50
+        124 Kevin                Mourgos                   KMOURGOS                                           650.123.5234         16-NOV-07 ST_MAN
+  5800          0        100            50
+        145 John                 Russell                   JRUSSEL                                            011.44.1344.429268   01-OCT-04 SA_MAN
+ 14000         .4        100            80
+        146 Karen                Partners                  KPARTNER                                           011.44.1344.467268   05-JAN-05 SA_MAN
+ 13500         .3        100            80
+        147 Alberto              Errazuriz                 AERRAZUR                                           011.44.1344.429278   10-MAR-05 SA_MAN
+ 12000         .3        100            80
+        148 Gerald               Cambrault                 GCAMBRAU                                           011.44.1344.619268   15-OCT-07 SA_MAN
+ 11000         .3        100            80
+        149 Eleni                Zlotkey                   EZLOTKEY                                           011.44.1344.429018   29-JAN-08 SA_MAN
+ 10500         .2        100            80
+
+18 rows selected.
+

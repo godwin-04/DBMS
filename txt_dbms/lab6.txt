@@ -1,0 +1,433 @@
+Roll no: 42
+Name: Godwin Shalom
+SEM/sec: V-B
+Batch: B3
+
+
+1. Write a PL/SQL program for swapping 2 numbers.
+SQL> DECLARE
+  2     num1 NUMBER := 5;
+  3     num2 NUMBER := 10;
+  4     temp NUMBER;
+  5  BEGIN
+  6     
+  7     DBMS_OUTPUT.PUT_LINE('Before swapping: num1 = ' || num1 || ', num2 = ' || num2);
+  8
+  9     
+ 10     temp := num1;
+ 11     num1 := num2;
+ 12     num2 := temp;
+ 13
+ 14     
+ 15     DBMS_OUTPUT.PUT_LINE('After swapping: num1 = ' || num1 || ', num2 = ' || num2);
+ 16  END;
+ 17  /
+Before swapping: num1 = 5, num2 = 10
+After swapping: num1 = 10, num2 = 5
+
+PL/SQL procedure successfully completed.
+
+
+
+2. Write a PL/SQL block to find the maximum number from given three
+numbers.
+SQL> DECLARE
+  2      
+  3      a NUMBER := 46;
+  4      
+  5      b NUMBER := 67;
+  6      
+  7      c NUMBER := 21;
+  8  BEGIN
+  9      
+ 10      
+ 11      IF a > b
+ 12         AND a > c THEN
+ 13        
+ 14        dbms_output.Put_line('Greatest number is '
+ 15                             ||a);
+ 16      ELSIF b > a
+ 17            AND b > c THEN
+ 18        
+ 19        dbms_output.Put_line('Greatest number is '
+ 20                             ||b);
+ 21      ELSE
+ 22        
+ 23        dbms_output.Put_line('Greatest number is '
+ 24                             ||c);
+ 25      END IF;
+ 26  
+ 27  END;
+ 28  /
+Greatest number is 67
+
+
+3. Write a PL/SQL program to input marks of 4 subjects. find the total
+and Percentage of 4 subjects and display the grade. [ Grade “fail “ if
+any of subject got percentage less than 40,
+Otherwise grade A (>85),B(less than 85 and >=75),C(less than 75 and
+>=65), D(less than 65)
+SQL> DECLARE
+  2    
+  3    subject1_marks NUMBER;
+  4    subject2_marks NUMBER;
+  5    subject3_marks NUMBER;
+  6    subject4_marks NUMBER;
+  7
+  8    
+  9    total_marks NUMBER;
+ 10    percentage NUMBER;
+ 11    grade VARCHAR2(2);
+ 12
+ 13  BEGIN
+ 14    
+ 15    DBMS_OUTPUT.PUT_LINE('Enter marks for Subject 1:');
+ 16    subject1_marks := TO_NUMBER(&&subject1_marks);
+ 17
+ 18    DBMS_OUTPUT.PUT_LINE('Enter marks for Subject 2:');
+ 19    subject2_marks := TO_NUMBER(&&subject2_marks);
+ 20
+ 21    DBMS_OUTPUT.PUT_LINE('Enter marks for Subject 3:');
+ 22    subject3_marks := TO_NUMBER(&&subject3_marks);
+ 23
+ 24    DBMS_OUTPUT.PUT_LINE('Enter marks for Subject 4:');
+ 25    subject4_marks := TO_NUMBER(&&subject4_marks);
+ 26
+ 27    
+ 28    total_marks := subject1_marks + subject2_marks + subject3_marks + subject4_marks;
+ 29    percentage := (total_marks / 4);
+ 30
+ 31    
+ 32    IF subject1_marks < 40 OR subject2_marks < 40 OR subject3_marks < 40 OR subject4_marks < 40 THEN
+ 33      grade := 'Fail';
+ 34    ELSIF percentage > 85 THEN
+ 35      grade := 'A';
+ 36    ELSIF percentage >= 75 THEN
+ 37      grade := 'B';
+ 38    ELSIF percentage >= 65 THEN
+ 39      grade := 'C';
+ 40    ELSE
+ 41      grade := 'D';
+ 42    END IF;
+ 43
+ 44    
+ 45    DBMS_OUTPUT.PUT_LINE('Total Marks: ' || total_marks);
+ 46    DBMS_OUTPUT.PUT_LINE('Percentage: ' || percentage || '%');
+ 47    DBMS_OUTPUT.PUT_LINE('Grade: ' || grade);
+ 48
+ 49  END;
+ 50  /
+Enter value for subject1_marks: 41
+old  16:   subject1_marks := TO_NUMBER(&&subject1_marks);
+new  16:   subject1_marks := TO_NUMBER(41);
+Enter value for subject2_marks: 50
+old  19:   subject2_marks := TO_NUMBER(&&subject2_marks);
+new  19:   subject2_marks := TO_NUMBER(50);
+Enter value for subject3_marks: 77
+old  22:   subject3_marks := TO_NUMBER(&&subject3_marks);
+new  22:   subject3_marks := TO_NUMBER(77);
+Enter value for subject4_marks: 88
+old  25:   subject4_marks := TO_NUMBER(&&subject4_marks);
+new  25:   subject4_marks := TO_NUMBER(88);
+Enter marks for Subject 1:
+Enter marks for Subject 2:
+Enter marks for Subject 3:
+Enter marks for Subject 4:
+Total Marks: 256
+Percentage: 64%
+Grade: D
+
+PL/SQL procedure successfully completed.
+
+4. Write a program to accept a number and find the sum of its digits.
+SQL> DECLARE
+  2    
+  3    num NUMBER;
+  4    original_number NUMBER;
+  5    digit NUMBER;
+  6    sum_of_digits NUMBER := 0;
+  7  BEGIN
+  8    
+  9    DBMS_OUTPUT.PUT_LINE('Enter a number:');
+ 10    num := TO_NUMBER(&&num);
+ 11
+ 12    
+ 13    original_number := num;
+ 14
+ 15    
+ 16    WHILE num > 0 LOOP
+ 17      digit := num MOD 10;  -- Get the last digit
+ 18      sum_of_digits := sum_of_digits + digit;  -- Add the digit to the sum
+ 19      num := num / 10;     -- Remove the last digit
+ 20      num := TRUNC(num);   -- Ensure integer division
+ 21    END LOOP;
+ 22
+ 23    
+ 24    DBMS_OUTPUT.PUT_LINE('The sum of digits of ' || original_number || ' is: ' || sum_of_digits);
+ 25
+ 26  END;
+ 27  /
+Enter value for num: 1234
+old  10:   num := TO_NUMBER(&&num);
+new  10:   num := TO_NUMBER(1234);
+Enter a number:
+The sum of digits of 1234 is: 10
+
+PL/SQL procedure successfully completed.
+
+
+5. Write a PL/SQL program to find the factorial of a given number.
+SQL> DECLARE
+  2    
+  3    num NUMBER;
+  4    factorial NUMBER := 1;
+  5  BEGIN
+  6    
+  7    DBMS_OUTPUT.PUT_LINE('Enter a number:');
+  8    num := TO_NUMBER(&&num);
+  9
+ 10    
+ 11    FOR i IN 1..num LOOP
+ 12      factorial := factorial * i;
+ 13    END LOOP;
+ 14
+ 15    
+ 16    DBMS_OUTPUT.PUT_LINE('The factorial of ' || num || ' is: ' || factorial);
+ 17  END;
+ 18  /
+Enter value for num: 5
+old   8:   num := TO_NUMBER(&&num);
+new   8:   num := TO_NUMBER(5);
+Enter a number:
+The factorial of 5 is: 120
+
+PL/SQL procedure successfully completed.
+
+
+6. Write a program to accept a number/string and check it is
+palindrome or not.
+SQL> DECLARE
+  2    
+  3    input_str VARCHAR2(50);
+  4    reversed_str VARCHAR2(50);
+  5  BEGIN
+  6    
+  7    DBMS_OUTPUT.PUT_LINE('Enter a number or string:');
+  8    input_str := UPPER('&input_str'); -- Convert to uppercase for case-insensitivity
+  9
+ 10    
+ 11    FOR i IN REVERSE 1..LENGTH(input_str) LOOP
+ 12      reversed_str := reversed_str || SUBSTR(input_str, i, 1);
+ 13    END LOOP;
+ 14
+ 15    
+ 16    IF input_str = reversed_str THEN
+ 17      DBMS_OUTPUT.PUT_LINE(input_str || ' is a palindrome.');
+ 18    ELSE
+ 19      DBMS_OUTPUT.PUT_LINE(input_str || ' is not a palindrome.');
+ 20    END IF;
+ 21  END;
+ 22  /
+Enter value for input_str: reviver
+old   8:   input_str := UPPER('&input_str'); -- Convert to uppercase for case-insensitivity
+new   8:   input_str := UPPER('reviver'); -- Convert to uppercase for case-insensitivity
+Enter a number or string:
+REVIVER is a palindrome.
+
+PL/SQL procedure successfully completed.
+
+
+7. Write a PL / SQL program to check whether the given number is
+prime or not.
+SQL> DECLARE
+  2    
+  3    num NUMBER;
+  4    is_prime BOOLEAN := TRUE;
+  5  BEGIN
+  6    
+  7    DBMS_OUTPUT.PUT_LINE('Enter a number:');
+  8    num := TO_NUMBER(&&num);
+  9
+ 10    
+ 11    FOR i IN 2..TRUNC(SQRT(num)) LOOP
+ 12      IF num MOD i = 0 THEN
+ 13        is_prime := FALSE;
+ 14        EXIT;
+ 15      END IF;
+ 16    END LOOP;
+ 17
+ 18    
+ 19    IF is_prime AND num > 1 THEN
+ 20      DBMS_OUTPUT.PUT_LINE(num || ' is a prime number.');
+ 21    ELSE
+ 22      DBMS_OUTPUT.PUT_LINE(num || ' is not a prime number.');
+ 23    END IF;
+ 24  END;
+ 25  /
+Enter value for num: 17
+old   8:   num := TO_NUMBER(&&num);
+new   8:   num := TO_NUMBER(17);
+Enter a number:
+17 is a prime number.
+
+PL/SQL procedure successfully completed.
+
+
+8. Write a PL / SQL code to find sum of below series.
+S=1/1!+2/2!+3/3!........n/n!
+SQL> DECLARE
+  2      n NUMBER := 5;
+  3      factorial NUMBER;
+  4      series_sum NUMBER := 0;
+  5  BEGIN
+  6      FOR i IN 1..n LOOP
+  7          
+  8          factorial := 1;
+  9          FOR j IN 1..i LOOP
+ 10              factorial := factorial * j;
+ 11          END LOOP;
+ 12
+ 13         
+ 14          series_sum := series_sum + (i / factorial);
+ 15      END LOOP;
+ 16
+ 17      
+ 18      DBMS_OUTPUT.PUT_LINE('Sum of the series: ' || series_sum);
+ 19  END;
+ 20  /
+Sum of the series: 2.70833333333333333333333333333333333334
+
+PL/SQL procedure successfully completed.
+
+
+9. Calculate the area of a triangle for a value of base varying from 3 to 9
+and for each base value height varying from 3 to 9. Store the base,
+height and the corresponding values of calculated area in table
+areatri. Consisting of three columns ht, bs and area.
+SQL> CREATE TABLE areatri (
+  2    ht NUMBER,
+  3    bs NUMBER,
+  4    area NUMBER
+  5  );
+
+Table created.
+
+SQL>
+SQL> DECLARE
+  2    
+  3    base NUMBER;
+  4    height NUMBER;
+  5    area_triangle NUMBER;
+  6  BEGIN
+  7    
+  8    FOR base IN 3..9 LOOP
+  9      FOR height IN 3..9 LOOP
+ 10        area_triangle := 0.5 * base * height;
+ 11        INSERT INTO areatri VALUES (height, base, area_triangle);
+ 12      END LOOP;
+ 13    END LOOP;
+ 14
+ 15    
+ 16    DBMS_OUTPUT.PUT_LINE('Data inserted into areatri table.');
+ 17  END;
+ 18  /
+Data inserted into areatri table.
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from areatri
+  2  ;
+
+        HT         BS       AREA
+---------- ---------- ----------
+         3          3        4.5
+         4          3          6
+         5          3        7.5
+         6          3          9
+         7          3       10.5
+         8          3         12
+         9          3       13.5
+         3          4          6
+         4          4          8
+         5          4         10
+         6          4         12
+
+        HT         BS       AREA
+---------- ---------- ----------
+         7          4         14
+         8          4         16
+         9          4         18
+         3          5        7.5
+         4          5         10
+         5          5       12.5
+         6          5         15
+         7          5       17.5
+         8          5         20
+         9          5       22.5
+         3          6          9
+
+        HT         BS       AREA
+---------- ---------- ----------
+         4          6         12
+         5          6         15
+         6          6         18
+         7          6         21
+         8          6         24
+         9          6         27
+         3          7       10.5
+         4          7         14
+         5          7       17.5
+         6          7         21
+         7          7       24.5
+
+        HT         BS       AREA
+---------- ---------- ----------
+         8          7         28
+         9          7       31.5
+         3          8         12
+         4          8         16
+         5          8         20
+         6          8         24
+         7          8         28
+         8          8         32
+         9          8         36
+         3          9       13.5
+         4          9         18
+
+        HT         BS       AREA
+---------- ---------- ----------
+         5          9       22.5
+         6          9         27
+         7          9       31.5
+         8          9         36
+         9          9       40.5
+
+49 rows selected.
+
+10. Print below pattern
+55555
+4444
+333
+22
+1
+SQL> DECLARE
+  2    
+  3    n NUMBER := 5;
+  4  BEGIN
+  5    
+  6    FOR i IN REVERSE 1..n LOOP
+  7      FOR j IN 1..i LOOP
+  8        DBMS_OUTPUT.PUT(i);
+  9      END LOOP;
+ 10      DBMS_OUTPUT.NEW_LINE;
+ 11    END LOOP;
+ 12  END;
+ 13  /
+55555
+4444
+333
+22
+1
+
+PL/SQL procedure successfully completed.
+

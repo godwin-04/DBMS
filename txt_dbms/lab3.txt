@@ -1,0 +1,474 @@
+Roll no: 42
+Name: Godwin Shalom
+SEM/sec: V-B
+Batch: B3
+
+
+TASK-01
+
+Create table using DDL Script
+Products (product_id Integer, product_type_id Integer, Name Varchar2(30), Price Integer)
+
+SQL> create table Products(
+  2  product_id int,
+  3  product_type_id int,
+  4  name varchar2(30),
+  5  price int,
+  6  constraint products_pk primary key(product_id));
+
+Table created.
+
+
+
+Insert following 09 tupules using DML scripts
+
+SQL> insert into products values (1,1,'Simple TV',1000.00);
+
+1 row created.
+
+SQL> insert into products values (2,1,'LED TV',1500.00);
+
+1 row created.
+
+SQL> insert into products values (3,1,'LCD TV',2000.00);
+
+1 row created.
+
+SQL> insert into products values (4,2,'Mobile Phone',1000.00);
+
+1 row created.
+
+SQL> insert into products values (5,2,'Smart Phone',2000.00);
+
+1 row created.
+
+SQL> insert into products values (6,2,'Jio Phone',3000.00);
+
+1 row created.
+
+SQL> insert into products values (7,3,'Simple WM',1500.00);
+
+1 row created.
+
+SQL> insert into products values (8,3,'Automated WM',2000.00);
+
+1 row created.
+
+SQL> insert into products values (9,3,'Semi WM',2500.00);
+
+1 row created.
+
+
+
+1. Count the number of products
+SQL> select count(*) no_of_products from products;
+
+NO_OF_PRODUCTS
+--------------
+             9
+
+2. Count the number of products and sum of price of products
+SQL> select count(*) no_of_products, sum(price) Sum_price from products;
+
+NO_OF_PRODUCTS  SUM_PRICE
+-------------- ----------
+             9      16500
+
+
+3. Count the number of products_type_id
+SQL> select count(product_type_id) no_of_product_type_id from products;
+
+NO_OF_PRODUCT_TYPE_ID
+---------------------
+                    9
+4. Count the number of distinct products_type_id
+SQL> select count(distinct product_type_id) no_of_product_type_id from products;
+
+NO_OF_PRODUCT_TYPE_ID
+---------------------
+                    9
+5. Calculate the average price of the product
+SQL> select avg(price) average_price from products;
+
+AVERAGE_PRICE
+-------------
+   1833.33333
+
+6. Calculate the average price of the distinct product
+SQL> select avg(distinct price) average_price from products;
+
+AVERAGE_PRICE
+-------------
+         2000
+
+7. Calculate maximum and minimum price of the product
+SQL> select min(price) min_price , max(price) max_price from products;
+
+ MIN_PRICE  MAX_PRICE
+---------- ----------
+      1000       3000
+
+
+8. Find the count of number of ROWID
+SQL> select count(rowid) rowid_count from products;
+
+ROWID_COUNT
+-----------
+          9
+
+9. Find maximum and minimum product name
+SQL> select max(name) max_product_name, min(name) min_product_name from
+products;
+
+MAX_PRODUCT_NAME               MIN_PRODUCT_NAME
+------------------------------ ------------------------------
+Smart Phone                    Automated WM
+
+10. Calculate standard deviation of price
+SQL> select stddev(price) std_dev_price from products;
+
+STD_DEV_PRICE
+-------------
+   661.437828
+
+
+
+11. Calculate variance of price
+SQL> select variance(price) var_price from products;
+
+ VAR_PRICE
+----------
+    437500
+
+12. Calculate average price group by product_type_id
+SQL> select product_type_id,avg(price) avg_price from products group by
+product_type_id;
+
+PRODUCT_TYPE_ID  AVG_PRICE
+--------------- ----------
+              1       1500
+              2       2000
+              3       2000
+
+13. Calculate Variance on price group by product_type_id
+SQL> select product_type_id,variance(price) var_price from products group by product_type_id;
+
+PRODUCT_TYPE_ID  VAR_PRICE
+--------------- ----------
+              1     250000
+              2    1000000
+              3     250000
+
+
+
+14. Calculate Variance on price group by product_type_id order by Variance
+SQL> select product_type_id,variance(price) var_price from products group by product_type_id order by var_price;
+
+PRODUCT_TYPE_ID  VAR_PRICE
+--------------- ----------
+              1     250000
+              3     250000
+              2    1000000
+
+
+
+15. Calculate average price group by product_type_id and having average price greater than 1500.
+SQL> select product_type_id,avg(price) avg_price from products group by product_type_id having avg(price)>1500;
+
+PRODUCT_TYPE_ID  AVG_PRICE
+--------------- ----------
+              2       2000
+              3       2000
+
+
+
+16. Calculate average price of the products whose price is less that Rs.2000 and group by product_type_id and having average price greater than 1500.
+SQL> select product_type_id,avg(price) avg_price from products where price<2000 group by product_type_id having avg(price)>1500 ;
+
+no rows selected
+
+
+
+
+
+
+
+TASK-02
+
+1. Find the highest sal of EMP table
+SQL> select max(sal) from emp;
+
+  MAX(SAL)
+----------
+      5500
+
+2. Find details of highest paid employee.
+SQL> select * from emp where sal in (select max(sal) from emp);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       5500                    10
+
+3. Find the highest paid employee of sales department
+SQL> select ename from emp where sal=(select max(sal) from emp where deptno=(select deptno from dept where dname='SALES')) and deptno=(select deptno from dept where dname='SALES');
+
+ENAME
+----------
+BLAKE
+
+
+4. Find the total sal given to the MGR
+SQL> select sum(sal) from emp where empno in (select mgr from emp);
+
+  SUM(SAL)
+----------
+     21775
+
+5. Find the total annual sal to distribute job wise in the year 81.
+SQL> select job,sum(12*sal) from emp where to_char(hiredate,'YY')='81' group by job;
+
+JOB       SUM(12*SAL)
+--------- -----------
+SALESMAN        67200
+CLERK           11400
+PRESIDENT       66000
+MANAGER        111300
+ANALYST         42000
+
+6. Display the average salaries of all the clerks.
+SQL> select avg(sal) from emp where job='CLERK';
+
+  AVG(SAL)
+----------
+    1412.5
+
+7. List the employeein dept 20 whose sal is &gt;the average sal 0f dept 10 emps
+SQL> select * from emp where deptno=20 and sal>(select avg(sal) from emp where deptno=10);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       3475                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3500                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3500                    20
+
+8. Display the number of employee for each job group deptno wise
+SQL> select deptno,job, count(*) from emp group by deptno,job;
+
+    DEPTNO JOB         COUNT(*)
+---------- --------- ----------
+        20 CLERK              2
+        30 SALESMAN           4
+        20 MANAGER            1
+        30 CLERK              1
+        10 PRESIDENT          1
+        30 MANAGER            1
+        10 CLERK              1
+        10 MANAGER            1
+        20 ANALYST            2
+
+9 rows selected.
+
+9. List the manage rno and the number of employees working for those mgrs in the
+ascending Mgrno.
+SQL> select a.MGR,count(*) from emp a, emp b where a.mgr=b.empno group by a.mgr order by a.mgr;
+
+       MGR   COUNT(*)
+---------- ----------
+      7566          2
+      7698          5
+      7782          1
+      7788          1
+      7839          3
+      7902          1
+
+6 rows selected.
+
+
+10. List departmentwise employee count
+SQL> select deptno, count(*) from emp group by deptno;
+
+    DEPTNO   COUNT(*)
+---------- ----------
+        30          6
+        20          5
+        10          3
+
+11. List the department, details where at least two emps are working
+SQL> select deptno, count(*) from emp group by deptno having count(*)>=2;
+
+    DEPTNO   COUNT(*)
+---------- ----------
+        30          6
+        20          5
+        10          3
+
+12. List the names of the emps who are getting the highest sal dept wise.
+SQL> select ename ,deptno from emp where sal in (select max(sal) from emp group by deptno);
+
+ENAME          DEPTNO
+---------- ----------
+BLAKE              30
+SCOTT              20
+KING               10
+FORD               20
+
+13. List the emps whose sal is greater than or equal to the average of max and minimum
+SQL> select * from emp where  sal>=(select (max(sal)+min(sal))/2 from emp);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7566 JONES      MANAGER         7839 02-APR-81       3475                    20
+      7788 SCOTT      ANALYST         7566 19-APR-87       3500                    20
+      7839 KING       PRESIDENT            17-NOV-81       5500                    10
+      7902 FORD       ANALYST         7566 03-DEC-81       3500                    20
+
+14. List the no. of emps in each department where the no. is more than 3.
+SQL> select deptno, count(*) from emp group by deptno having count(*)>3;
+
+    DEPTNO   COUNT(*)
+---------- ----------
+        30          6
+        20          5
+
+15. Find out how may Managers are their in the company.
+SQL> select count(*) from emp where empno in( select mgr from emp);
+
+  COUNT(*)
+----------
+         6
+
+16. Check whether all the emps numbers are indeed unique
+SQL> select empno,count(*) from emp group by empno;
+
+     EMPNO   COUNT(*)
+---------- ----------
+      7369          1
+      7499          1
+      7521          1
+      7566          1
+      7654          1
+      7698          1
+      7782          1
+      7788          1
+      7839          1
+      7844          1
+      7876          1
+      7900          1
+      7902          1
+      7934          1
+
+14 rows selected.
+
+17. Find all the emps who earn the minimum Salary for each job wise in ascending
+order.
+SQL> select * from emp where sal in (select min(sal) from emp group by job) order by sal;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7788 SCOTT      ANALYST         7566 19-APR-87       3500                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3500                    20
+      7839 KING       PRESIDENT            17-NOV-81       5500                    10
+
+7 rows selected.
+
+18. Find out all the emps who earn highest salary in each job type. Sort in descending
+salary order.
+SQL> select * from emp where sal in (select max(sal) from emp group by job) order by sal desc;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       5500                    10
+      7788 SCOTT      ANALYST         7566 19-APR-87       3500                    20
+      7902 FORD       ANALYST         7566 03-DEC-81       3500                    20
+      7566 JONES      MANAGER         7839 02-APR-81       3475                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1800                    10
+      7876 ADAMS      CLERK           7788 23-MAY-87       1600                    20
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+
+7 rows selected.
+
+19. List the Deptno where there are no emps.
+SQL> select b.deptno ,count(a.deptno) from dept b left outer join emp a on a.deptno=b.deptno group by b.deptno having count(a.deptno)=0;
+
+    DEPTNO COUNT(A.DEPTNO)
+---------- ---------------
+        40               0
+
+
+20. List the No.of emp’s and Avg salary within each department for each job.
+SQL> select count(*), avg(sal) ,deptno,job from emp group by deptno, job;
+
+  COUNT(*)   AVG(SAL)     DEPTNO JOB
+---------- ---------- ---------- ---------
+         2       1450         20 CLERK
+         4       1400         30 SALESMAN
+         1       3475         20 MANAGER
+         1        950         30 CLERK
+         1       5500         10 PRESIDENT
+         1       2850         30 MANAGER
+         1       1800         10 CLERK
+         1       2950         10 MANAGER
+         2       3500         20 ANALYST
+
+9 rows selected.
+
+21. Find the maximum average salary drawn for each job except for ‘President’.
+SQL> select max(x) from ( select avg(sal) x from emp where job!='PRESIDENT' group by job);
+
+    MAX(X)
+----------
+      3500
+
+22. List the highest paid emp.
+SQL> select * from emp where sal in (select max(sal) from emp);
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       5500                    10
+
+23. List the details of most recently hired emp of dept 30.
+SQL> select * from emp where hiredate in (select max(hiredate) from emp where deptno=30) and deptno=30;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+
+24. Find the count of employee, average salary and sum of the salary
+SQL> select count(*), avg(sal), sum(sal) from emp;
+
+  COUNT(*)   AVG(SAL)   SUM(SAL)
+---------- ---------- ----------
+        14 2358.92857      33025
+
+25. Find the count of employee, average salary and sum of the salary and group by
+department number wise in the ascending order
+SQL> select deptno, count(*), avg(sal),sum(sal) from emp group by deptno order by deptno;
+
+    DEPTNO   COUNT(*)   AVG(SAL)   SUM(SAL)
+---------- ---------- ---------- ----------
+        10          3 3416.66667      10250
+        20          5       2675      13375
+        30          6 1566.66667       9400
+
+26. Find the count of employee, average salary and sum of the salary and group by
+department number wise and job wise and in the ascending order of dept number
+and Job.
+SQL> select deptno,job, count(*), avg(sal),sum(sal) from emp group by deptno,job order by deptno,job;
+
+    DEPTNO JOB         COUNT(*)   AVG(SAL)   SUM(SAL)
+---------- --------- ---------- ---------- ----------
+        10 CLERK              1       1800       1800
+        10 MANAGER            1       2950       2950
+        10 PRESIDENT          1       5500       5500
+        20 ANALYST            2       3500       7000
+        20 CLERK              2       1450       2900
+        20 MANAGER            1       3475       3475
+        30 CLERK              1        950        950
+        30 MANAGER            1       2850       2850
+        30 SALESMAN           4       1400       5600
+
+9 rows selected.
